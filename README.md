@@ -1,1 +1,1 @@
-# Rock_Paper_Scissor
+In this project, I will be building a rock-paper-scissors game using JavaScript. The user will put in their choice and play a simulated best-of-five game with the computer. This will allow me to be able to practice JavaScript and git.
