@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>Rock-Paper-Scissors Game</title>
+    </head>
+    <body>
+        <script>
+            
+            //Gets a random selection from the Computer
+            function computerPlay(){
+                let computerSelection = null;
+                let randomNumberBetweenOneAndThree = Math.floor((Math.random() * 3) + 1);
+
+                switch (randomNumberBetweenOneAndThree) {
+                    case 1:
+                        computerSelection = "rock";
+                        break;
+
+                    case 2:
+                        computerSelection = "scissors";
+                        break;
+
+                    case 3: 
+                        computerSelection = "paper";
+                        break;
+                }
+
+                return computerSelection;
+            }
+
+            //Gets a user selection; Ensures that the user passes a valid input
+            function getUserSelection(){
+                let userSelection = null;
+                
+                do{
+                    userSelection = prompt("Please enter one of the following: Rock, Paper, or Scissors");
+                    
+                    if(userSelection !== null){
+                        userSelection = userSelection.toLowerCase();
+                    }
+
+                } while (userSelection !== "rock" && userSelection !== "scissors" && userSelection !== "paper");
+
+                return userSelection;
+            }
+
+            //Takes two inputs and determines the result
+            function determineResultOfSelections(input1, input2){
+                let result = null;
+
+                if(input1 === input2){
+                    result = "tie";
+                } else if ((input1 === "rock" && input2 === "paper") || (input1 === "paper" && input2 === "rock")){
+                    result = "paper";
+                } else if ((input1 === "rock" && input2 === "scissors") || (input1 === "scissors" && input2 === "rock")){
+                    result = "rock";
+                } else if ((input1 === "paper" && input2 === "scissors") || (input1 === "scissors" && input2 === "paper")){
+                    result = "scissors";
+                }
+
+                return result;
+            }
+
+            //Plays a round of Rock/Paper/Scissors and returns the result in relation to the user's input
+            function playRound(){
+                let userInput = getUserSelection();
+                let computerInput = computerPlay();
+
+                let resultOfInputs = determineResultOfSelections(userInput, computerInput);
+                let resultOfRound = null;
+
+                if(resultOfInputs === "tie"){
+                    resultOfRound = "It is a tie! " + userInput + " equals " + computerInput;
+                    console.log(resultOfRound);
+                } else if (resultOfInputs === userInput){
+                    resultOfRound = "You won! " + userInput + " beats " + computerInput;
+                    console.log(resultOfRound);
+                } else {
+                    resultOfRound = "You lost! " + computerInput + " beats " + userInput;
+                    console.log(resultOfRound);
+                }
+
+                return resultOfRound;
+            }   
+
+            //Plays a best of five game of rock/paper/scissors; logs the results of each round
+            function game(){
+                let userWinCounter = 0;
+                let computerWinCounter = 0;
+                let result = null;
+
+                do{
+                    result = playRound();
+                    
+                    if(result.includes("won")){
+                        userWinCounter++;
+                    } else if(result.includes("lost")){
+                        computerWinCounter++;
+                    }
+                } while (userWinCounter < 3 && computerWinCounter < 3)
+
+                return "User wins: " + userWinCounter + " Computer wins: " + computerWinCounter;
+            }     
+        </script>
+    </body>
+</html>

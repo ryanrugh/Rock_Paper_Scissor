@@ -5,6 +5,16 @@
         <title>Rock-Paper-Scissors Game</title>
     </head>
     <body>
+        <div id="main">
+            <button type="submit" name="option" value="rock">Rock</button>
+            <button type="submit" name="option" value="paper">Paper</button>
+            <button type="submit" name="option" value="scissors">Scissors</button>
+            <button type="submit" value="restart">Restart</button>
+
+            <div id="result"></div>
+            <div id="userScore" data-value="0"></div>
+            <div id="computerScore" data-value="0"></div>
+        </div>
         <script>
             
             //Gets a random selection from the Computer
@@ -29,21 +39,21 @@
                 return computerSelection;
             }
 
-            //Gets a user selection; Ensures that the user passes a valid input
-            function getUserSelection(){
-                let userSelection = null;
+            // //Gets a user selection; Ensures that the user passes a valid input
+            // function getUserSelection(){
+            //     let userSelection = null;
                 
-                do{
-                    userSelection = prompt("Please enter one of the following: Rock, Paper, or Scissors");
+            //     do{
+            //         userSelection = prompt("Please enter one of the following: Rock, Paper, or Scissors");
                     
-                    if(userSelection !== null){
-                        userSelection = userSelection.toLowerCase();
-                    }
+            //         if(userSelection !== null){
+            //             userSelection = userSelection.toLowerCase();
+            //         }
 
-                } while (userSelection !== "rock" && userSelection !== "scissors" && userSelection !== "paper");
+            //     } while (userSelection !== "rock" && userSelection !== "scissors" && userSelection !== "paper");
 
-                return userSelection;
-            }
+            //     return userSelection;
+            // }
 
             //Takes two inputs and determines the result
             function determineResultOfSelections(input1, input2){
@@ -63,45 +73,64 @@
             }
 
             //Plays a round of Rock/Paper/Scissors and returns the result in relation to the user's input
-            function playRound(){
-                let userInput = getUserSelection();
+            function playRound(e){
                 let computerInput = computerPlay();
+                let userInput = e.explicitOriginalTarget.value;
 
                 let resultOfInputs = determineResultOfSelections(userInput, computerInput);
                 let resultOfRound = null;
 
-                if(resultOfInputs === "tie"){
-                    resultOfRound = "It is a tie! " + userInput + " equals " + computerInput;
-                    console.log(resultOfRound);
-                } else if (resultOfInputs === userInput){
-                    resultOfRound = "You won! " + userInput + " beats " + computerInput;
-                    console.log(resultOfRound);
-                } else {
-                    resultOfRound = "You lost! " + computerInput + " beats " + userInput;
-                    console.log(resultOfRound);
-                }
+                const resultContainer = document.querySelector('#result');
+                const userScoreContainer = document.querySelector('#userScore');
+                const computerScoreContainer = document.querySelector('#computerScore');
 
-                return resultOfRound;
-            }   
+                let userWinCounter = userScoreContainer.getAttribute('data-value');
+                let computerWinCounter = computerScoreContainer.getAttribute('data-value');
 
-            //Plays a best of five game of rock/paper/scissors; logs the results of each round
-            function game(){
-                let userWinCounter = 0;
-                let computerWinCounter = 0;
-                let result = null;
-
-                do{
-                    result = playRound();
-                    
-                    if(result.includes("won")){
+                if(userWinCounter < 3 && computerWinCounter < 3){
+                    if(resultOfInputs === "tie"){
+                        resultOfRound = "It is a tie! " + userInput + " equals " + computerInput;
+                        console.log(resultOfRound);
+                    } else if (resultOfInputs === userInput){
+                        resultOfRound = "You won! " + userInput + " beats " + computerInput;
+                        console.log(resultOfRound);
                         userWinCounter++;
-                    } else if(result.includes("lost")){
+                    } else {
+                        resultOfRound = "You lost! " + computerInput + " beats " + userInput;
+                        console.log(resultOfRound);
                         computerWinCounter++;
                     }
-                } while (userWinCounter < 3 && computerWinCounter < 3)
 
-                return "User wins: " + userWinCounter + " Computer wins: " + computerWinCounter;
-            }     
+                    resultContainer.textContent = resultOfRound;
+                    userScoreContainer.setAttribute('data-value', userWinCounter);
+                    userScoreContainer.textContent = `User score: ${userWinCounter}`;
+                    computerScoreContainer.setAttribute('data-value', computerWinCounter);
+                    computerScoreContainer.textContent = `Computer Score: ${computerWinCounter}`;
+                }
+
+                if(userWinCounter === 3){
+                    resultContainer.textContent = "You WIN!!!!!";
+                } else if (computerWinCounter === 3){
+                    resultContainer.textContent = "You LOSE!!! Computer WINS!!!"
+                }
+            }   
+
+            function restartGame(){
+                const resultContainer = document.querySelector('#result');
+                const userScoreContainer = document.querySelector('#userScore');
+                const computerScoreContainer = document.querySelector('#computerScore');
+
+                resultContainer.textContent = "Game Restart";
+                userScoreContainer.setAttribute('data-value', 0);
+                userScoreContainer.textContent = "User score: 0";
+                computerScoreContainer.setAttribute('data-value', 0);
+                computerScoreContainer.textContent = "Computer Score: 0";
+            }
+            
+            const buttons = document.querySelectorAll('button[name="option"]');
+            buttons.forEach(button => button.addEventListener('click', playRound));
+            const restartButton = document.querySelector('button[value="restart"]');
+            restartButton.addEventListener('click', restartGame);
         </script>
     </body>
-</html>
+</html> 
